@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Rekentafels – OBS 't Joppe</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blauw:        #4A90C4;
+    --blauw-dark:   #2E6A9A;
+    --blauw-diep:   #1D4D73;
+    --blauw-licht:  #D6EAF8;
+    --blauw-zacht:  #EBF5FB;
+    --blauw-mid:    #7FB3D3;
+    --wit:          #FFFFFF;
+    --achtergrond:  #EEF6FC;
+    --tekst:        #1A3A52;
+    --tekst-zacht:  #5A86A0;
+    --rand:         #B3D4E8;
+    --groen:        #52BE80;
+    --groen-licht:  #E9F7EF;
+    --groen-dark:   #239B56;
+    --rood:         #E74C3C;
+    --rood-licht:   #FDECEA;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--achtergrond);
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center;
+    padding: 0 0 48px;
+  }
+
+  /* ── LOGO BANNER ── */
+  .logo-banner {
+    width: 100%; background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    padding: 14px 20px;
+    box-shadow: 0 3px 14px rgba(74,144,196,0.15);
+    margin-bottom: 20px;
+    border-bottom: 3px solid var(--blauw-licht);
+  }
+  .logo-svg-wrap { max-width: 220px; width: 100%; }
+
+  /* ── KAART ── */
+  .kaart {
+    background: var(--wit);
+    border-radius: 24px;
+    padding: 24px 20px 28px;
+    max-width: 400px; width: calc(100% - 28px);
+    box-shadow: 0 6px 32px rgba(74,144,196,0.14), 0 1px 4px rgba(0,0,0,0.06);
+    border: 2px solid var(--rand);
+  }
+
+  .header { text-align: center; margin-bottom: 22px; }
+  .header-icoon { font-size: 44px; display: block; animation: wip 2.6s ease-in-out infinite; }
+  @keyframes wip { 0%,100%{transform:rotate(-7deg)} 50%{transform:rotate(7deg)} }
+  h1 { font-size: 24px; font-weight: 900; color: var(--tekst); margin-top: 6px; margin-bottom: 2px; }
+  h1 span { color: var(--blauw); }
+  .ondertitel { font-size: 13px; color: var(--tekst-zacht); font-weight: 700; }
+
+  .sectie-label {
+    font-size: 10px; font-weight: 900; letter-spacing: 0.09em;
+    text-transform: uppercase; color: var(--tekst-zacht); margin-bottom: 9px;
+  }
+
+  .tafel-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 7px; margin-bottom: 18px; }
+  .tafel-knop {
+    padding: 12px 0; border-radius: 13px;
+    border: 2px solid var(--rand);
+    background: var(--wit); color: var(--tekst);
+    font-size: 17px; font-weight: 900;
+    cursor: pointer; transition: all 0.13s; position: relative;
+    user-select: none;
+  }
+  .tafel-knop:active { transform: scale(0.9); }
+  .tafel-knop.actief {
+    background: var(--blauw); color: #fff;
+    border-color: var(--blauw-dark);
+    box-shadow: 0 3px 10px rgba(74,144,196,0.38);
+  }
+  .tafel-knop.actief::after {
+    content:'✓'; position:absolute; top:-7px; right:-5px;
+    width:16px; height:16px; background: var(--groen); color:#fff;
+    border-radius:50%; font-size:9px; font-weight:900;
+    display:flex; align-items:center; justify-content:center;
+    line-height:16px; text-align:center;
+  }
+
+  .aantal-rij { display:flex; gap:7px; margin-bottom:22px; }
+  .aantal-knop {
+    flex:1; padding:10px 0; border-radius:11px;
+    border:2px solid var(--rand); background:var(--wit);
+    color:var(--tekst-zacht); font-size:14px; font-weight:900;
+    cursor:pointer; transition:all 0.12s; user-select:none;
+  }
+  .aantal-knop:active { transform:scale(0.93); }
+  .aantal-knop.actief {
+    background: var(--blauw-diep); color:#fff;
+    border-color: var(--blauw-diep);
+    box-shadow: 0 3px 10px rgba(29,77,115,0.3);
+  }
+
+  .hint { font-size:12px; color:var(--rood); font-weight:800; margin-bottom:10px; min-height:18px; }
+
+  .start-knop {
+    width:100%; padding:15px; border-radius:16px; border:none;
+    background: linear-gradient(135deg, var(--blauw) 0%, var(--blauw-diep) 100%);
+    color:#fff; font-size:17px; font-weight:900;
+    cursor:pointer; letter-spacing:0.2px;
+    box-shadow: 0 5px 0 var(--blauw-diep), 0 8px 20px rgba(74,144,196,0.3);
+    transition: transform 0.1s, box-shadow 0.1s; user-select:none;
+  }
+  .start-knop:active {
+    transform:translateY(4px);
+    box-shadow: 0 1px 0 var(--blauw-diep), 0 2px 8px rgba(74,144,196,0.2);
+  }
+
+  .voortgang-balk { height:10px; background:var(--blauw-licht); border-radius:5px; margin-bottom:16px; overflow:hidden; border:1.5px solid var(--rand); }
+  .voortgang-vul {
+    height:100%;
+    background: linear-gradient(90deg, var(--blauw-mid), var(--blauw-diep));
+    border-radius:4px; transition:width 0.4s cubic-bezier(.4,0,.2,1);
+  }
+
+  .stat-rij { display:flex; gap:8px; margin-bottom:16px; }
+  .stat { flex:1; border-radius:12px; padding:10px 6px; text-align:center; border:2px solid transparent; }
+  .stat.goed-s { background:var(--groen-licht); border-color:#A9DFC0; }
+  .stat.fout-s { background:var(--rood-licht);  border-color:#F5B8B8; }
+  .stat.nr-s   { background:var(--blauw-zacht); border-color:var(--rand); }
+  .stat-getal { font-size:21px; font-weight:900; color:var(--tekst); }
+  .stat-naam  { font-size:11px; color:var(--tekst-zacht); font-weight:800; }
+
+  .vraag-vak {
+    background: linear-gradient(150deg, var(--blauw) 0%, var(--blauw-diep) 100%);
+    border-radius:22px; padding:22px 18px 18px;
+    text-align:center; margin-bottom:12px;
+    box-shadow: 0 5px 0 var(--blauw-diep), 0 10px 24px rgba(29,77,115,0.25);
+    position:relative; overflow:hidden;
+  }
+  .vraag-vak::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:5px;
+    background: rgba(255,255,255,0.35); border-radius:22px 22px 0 0;
+  }
+
+  .timer-rij { display:flex; align-items:center; justify-content:center; gap:7px; margin-bottom:14px; margin-top:2px; }
+  .timer-balk-bg { flex:1; max-width:150px; height:7px; background:rgba(255,255,255,0.22); border-radius:4px; overflow:hidden; }
+  .timer-balk-vul { height:100%; background:rgba(255,255,255,0.85); border-radius:4px; transition:width 0.1s linear; }
+  .timer-getal { font-size:13px; font-weight:900; color:rgba(255,255,255,0.88); min-width:36px; text-align:right; }
+
+  .som-tekst { font-size:50px; font-weight:900; color:#fff; letter-spacing:-1px; margin-bottom:16px; line-height:1; }
+  .antwoord-display {
+    display:inline-block; min-width:120px; padding:10px 22px;
+    border-radius:14px; border:3px solid rgba(255,255,255,0.38);
+    background:rgba(255,255,255,0.16);
+    font-size:34px; font-weight:900; color:#fff;
+    min-height:60px; line-height:1.2; transition:all 0.15s;
+  }
+  .antwoord-display.leeg { color:rgba(255,255,255,0.32); }
+  .antwoord-display.goed { background:rgba(82,190,128,0.35); border-color:#7FE8B0; animation:ruk 0.35s ease; }
+  .antwoord-display.fout { background:rgba(231,76,60,0.35); border-color:#FFA0A0; animation:schud 0.4s ease; }
+  @keyframes ruk  { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+  @keyframes schud{ 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+  .feedback-tekst { min-height:26px; font-size:16px; font-weight:900; margin-top:12px; color:rgba(255,255,255,0.95); }
+
+  .keypad { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; margin-bottom:12px; }
+  .key {
+    padding:17px 0; border-radius:14px;
+    border:2px solid var(--rand); background:var(--wit); color:var(--tekst);
+    font-size:24px; font-weight:900;
+    cursor:pointer; transition:background 0.08s, transform 0.08s;
+    user-select:none; -webkit-user-select:none;
+    box-shadow: 0 3px 0 var(--rand);
+  }
+  .key:active { transform:translateY(2px); box-shadow:0 1px 0 var(--rand); background:var(--blauw-zacht); }
+  .key.wis { background:var(--rood-licht); color:var(--rood); border-color:#F5C0C0; box-shadow:0 3px 0 #EAB0B0; font-size:14px; font-weight:900; }
+  .key.wis:active { background:#FBDADA; }
+  .key.ok {
+    background: linear-gradient(135deg, var(--blauw) 0%, var(--blauw-diep) 100%);
+    color:#fff; border-color:var(--blauw-dark); box-shadow:0 3px 0 var(--blauw-diep);
+    font-size:14px; font-weight:900;
+  }
+  .key.ok:active { transform:translateY(2px); box-shadow:0 1px 0 var(--blauw-diep); }
+  .key.uitgeschakeld { opacity:0.28; pointer-events:none; }
+
+  .terug-knop {
+    background:none; border:2px solid var(--rand);
+    color:var(--tekst-zacht); font-size:13px; font-weight:800;
+    padding:9px 18px; border-radius:11px; cursor:pointer;
+  }
+
+  .einde-center { text-align:center; margin-bottom:20px; }
+  .einde-ster { font-size:54px; margin-bottom:6px; animation:sterbounce 1.4s infinite; }
+  @keyframes sterbounce { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-8px) scale(1.08)} }
+  .einde-titel { font-size:26px; font-weight:900; color:var(--tekst); margin-bottom:4px; }
+  .einde-sub { font-size:14px; color:var(--tekst-zacht); font-weight:700; }
+
+  .einde-stats { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:18px; }
+  .einde-stat { border-radius:14px; padding:14px 10px; text-align:center; border:2px solid transparent; }
+  .einde-stat.groen  { background:var(--groen-licht); border-color:#A9DFC0; }
+  .einde-stat.rood   { background:var(--rood-licht);  border-color:#F5B8B8; }
+  .einde-stat.blauw  { background:var(--blauw-licht); border-color:var(--rand); }
+  .einde-stat.lblauw { background:var(--blauw-zacht); border-color:var(--rand); }
+  .einde-stat-getal  { font-size:28px; font-weight:900; color:var(--tekst); }
+  .einde-stat-naam   { font-size:11px; color:var(--tekst-zacht); font-weight:800; margin-top:3px; }
+
+  .knop-rij { display:flex; gap:10px; }
+  .knop-sec {
+    flex:1; padding:14px; border-radius:14px;
+    border:2px solid var(--rand); background:var(--wit); color:var(--tekst);
+    font-size:15px; font-weight:900; cursor:pointer;
+  }
+  .knop-sec:active { background:var(--blauw-zacht); }
+
+  .ster-regen { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:999; overflow:hidden; }
+  .ster-val { position:absolute; top:-30px; animation:val-neer 1.3s ease-in forwards; }
+  @keyframes val-neer { 0%{transform:translateY(0) rotate(0deg);opacity:1} 100%{transform:translateY(110vh) rotate(420deg);opacity:0} }
+
+  .verborgen { display:none !important; }
+</style>
+</head>
+<body>
+
+<!-- Logo banner – nagebootst naar het originele logo -->
+<div class="logo-banner">
+  <div class="logo-svg-wrap">
+    <svg viewBox="0 0 320 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+
+      <!-- Achtergrond wolken / lucht -->
+
+      <!-- BOOM links groot -->
+      <ellipse cx="38" cy="38" rx="22" ry="26" fill="#7FB8D8" opacity="0.55"/>
+      <ellipse cx="30" cy="44" rx="14" ry="18" fill="#7FB8D8" opacity="0.45"/>
+      <rect x="35" y="60" width="5" height="18" rx="2" fill="#A0C8E0" opacity="0.7"/>
+
+      <!-- BOOM midden -->
+      <ellipse cx="68" cy="42" rx="16" ry="20" fill="#5FA8CC" opacity="0.6"/>
+      <ellipse cx="62" cy="48" rx="10" ry="13" fill="#5FA8CC" opacity="0.5"/>
+      <rect x="65" y="58" width="4" height="14" rx="2" fill="#90C0D8" opacity="0.7"/>
+
+      <!-- BOOM rechts klein -->
+      <ellipse cx="90" cy="50" rx="11" ry="14" fill="#7FB8D8" opacity="0.5"/>
+      <rect x="88" y="61" width="3" height="10" rx="1.5" fill="#A0C8E0" opacity="0.6"/>
+
+      <!-- Mensen-icoontjes (3 figuren) -->
+      <!-- figuur 1 -->
+      <circle cx="25" cy="70" r="4" fill="#4A90C4" opacity="0.85"/>
+      <path d="M21,74 Q25,82 29,74" fill="none" stroke="#4A90C4" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+      <!-- figuur 2 -->
+      <circle cx="40" cy="68" r="4.5" fill="#2E6A9A" opacity="0.85"/>
+      <path d="M35,73 Q40,82 45,73" fill="none" stroke="#2E6A9A" stroke-width="3.5" stroke-linecap="round" opacity="0.85"/>
+      <!-- figuur 3 -->
+      <circle cx="55" cy="70" r="4" fill="#4A90C4" opacity="0.85"/>
+      <path d="M51,74 Q55,82 59,74" fill="none" stroke="#4A90C4" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+
+      <!-- Donkerblauwe ovale vijver / grond – kenmerkend element uit logo -->
+      <ellipse cx="55" cy="90" rx="58" ry="12" fill="#1D4D73"/>
+
+      <!-- Tekst 't -->
+      <text x="108" y="58" font-family="Georgia, 'Times New Roman', serif" font-size="18" fill="#4A90C4" font-style="italic" font-weight="bold">'t</text>
+
+      <!-- Kleine tekst "openbare basisschool" -->
+      <text x="126" y="40" font-family="Arial, sans-serif" font-size="9.5" fill="#7FB3D3" letter-spacing="0.3">openbare basisschool</text>
+
+      <!-- Grote JOPPE tekst -->
+      <text x="122" y="75"
+            font-family="Georgia, 'Times New Roman', serif"
+            font-size="46"
+            font-weight="bold"
+            font-style="italic"
+            fill="#4A90C4"
+            letter-spacing="-1">JOPPE</text>
+
+      <!-- Onderste donkerblauwe balk (vijver onder tekst) -->
+      <ellipse cx="210" cy="96" rx="88" ry="11" fill="#1D4D73"/>
+
+    </svg>
+  </div>
+</div>
+
+<div class="kaart">
+
+  <!-- KEUZE SCHERM -->
+  <div id="keuze-scherm">
+    <div class="header">
+      <span class="header-icoon">🧮</span>
+      <h1>Reken<span>tafels</span>!</h1>
+      <p class="ondertitel">Kies tafels en hoeveel sommen — dan gaan! 🚀</p>
+    </div>
+
+    <p class="sectie-label">📚 Welke tafels? (meerdere mag!)</p>
+    <div class="tafel-grid" id="tafel-grid"></div>
+
+    <p class="sectie-label">🔢 Hoeveel sommen?</p>
+    <div class="aantal-rij" id="aantal-rij"></div>
+
+    <div class="hint" id="hint"></div>
+    <button class="start-knop" onclick="startSpel()">🚀 Begin met oefenen!</button>
+  </div>
+
+  <!-- SPEL SCHERM -->
+  <div id="spel-scherm" class="verborgen">
+    <div class="voortgang-balk"><div class="voortgang-vul" id="voortgang-vul" style="width:0%"></div></div>
+    <div class="stat-rij">
+      <div class="stat goed-s"><div class="stat-getal" id="stat-goed">0</div><div class="stat-naam">✓ Goed</div></div>
+      <div class="stat fout-s"><div class="stat-getal" id="stat-fout">0</div><div class="stat-naam">✗ Fout</div></div>
+      <div class="stat nr-s">  <div class="stat-getal" id="stat-nr">1/10</div><div class="stat-naam">📍 Vraag</div></div>
+    </div>
+    <div class="vraag-vak">
+      <div class="timer-rij">
+        <span style="font-size:13px;color:rgba(255,255,255,0.75)">⏱️</span>
+        <div class="timer-balk-bg"><div class="timer-balk-vul" id="timer-balk" style="width:100%"></div></div>
+        <span class="timer-getal" id="timer-getal">0.0s</span>
+      </div>
+      <div class="som-tekst" id="som-tekst">—</div>
+      <div class="antwoord-display leeg" id="antwoord-display">?</div>
+      <div class="feedback-tekst" id="feedback"></div>
+    </div>
+    <div class="keypad">
+      <button class="key" onclick="toetsInvoer('1')">1</button>
+      <button class="key" onclick="toetsInvoer('2')">2</button>
+      <button class="key" onclick="toetsInvoer('3')">3</button>
+      <button class="key" onclick="toetsInvoer('4')">4</button>
+      <button class="key" onclick="toetsInvoer('5')">5</button>
+      <button class="key" onclick="toetsInvoer('6')">6</button>
+      <button class="key" onclick="toetsInvoer('7')">7</button>
+      <button class="key" onclick="toetsInvoer('8')">8</button>
+      <button class="key" onclick="toetsInvoer('9')">9</button>
+      <button class="key" onclick="toetsInvoer('0')">0</button>
+      <button class="key wis" onclick="wis()">⌫ Wis</button>
+      <button class="key ok"  onclick="controleer()">✓ OK!</button>
+    </div>
+    <button class="terug-knop" onclick="naarKeuze()">← Terug</button>
+  </div>
+
+  <!-- EINDE SCHERM -->
+  <div id="einde-scherm" class="verborgen">
+    <div class="einde-center">
+      <div class="einde-ster" id="einde-ster">🏆</div>
+      <div class="einde-titel" id="einde-titel">Geweldig!</div>
+      <div class="einde-sub"  id="einde-sub">Je hebt alle sommen gedaan!</div>
+    </div>
+    <div class="einde-stats">
+      <div class="einde-stat groen"> <div class="einde-stat-getal" id="eind-goed">0</div><div class="einde-stat-naam">✓ Goed</div></div>
+      <div class="einde-stat rood">  <div class="einde-stat-getal" id="eind-fout">0</div><div class="einde-stat-naam">✗ Fout</div></div>
+      <div class="einde-stat blauw"> <div class="einde-stat-getal" id="eind-pct">0%</div><div class="einde-stat-naam">🎯 Score</div></div>
+      <div class="einde-stat lblauw"><div class="einde-stat-getal" id="eind-tijd">—</div><div class="einde-stat-naam">⏱️ Gem. tijd</div></div>
+    </div>
+    <div class="knop-rij">
+      <button class="knop-sec" onclick="naarKeuze()">🔁 Andere keuze</button>
+      <button class="start-knop" style="flex:1" onclick="startSpel()">Opnieuw! 🚀</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const alleT=[1,2,3,4,5,6,7,8,9,10];
+const aantalOpties=[5,10,20,50];
+const goedTekst=['Super! 🌟','Goed zo! 🎉','Yes! ⭐','Fantastisch! 🏆','Top! 💫','Joppe! 👏','Briljant! 🎯','Wauw! ✨'];
+const foutTekst=['Bijna! 💪','Oeps! 🙈','Niet erg! 🤗','Volgende keer! 😊'];
+
+let gekozenTafels=new Set([2,5]);
+let gekozenAantal=10;
+let vragen=[],huidig=0,aantalGoed=0,aantalFout=0,bezig=false,huidigAntwoord='';
+let vraagStart=0,tijdenGoed=[],timerInt=null;
+
+const grid=document.getElementById('tafel-grid');
+alleT.forEach(t=>{
+  const b=document.createElement('button');
+  b.className='tafel-knop'+(gekozenTafels.has(t)?' actief':'');
+  b.textContent=t; b.id='tafel-'+t;
+  b.onclick=()=>{
+    if(gekozenTafels.has(t)){if(gekozenTafels.size>1){gekozenTafels.delete(t);b.classList.remove('actief');}}
+    else{gekozenTafels.add(t);b.classList.add('actief');}
+  };
+  grid.appendChild(b);
+});
+
+const ar=document.getElementById('aantal-rij');
+aantalOpties.forEach(n=>{
+  const b=document.createElement('button');
+  b.className='aantal-knop'+(n===gekozenAantal?' actief':'');
+  b.textContent=n;
+  b.onclick=()=>{gekozenAantal=n;document.querySelectorAll('.aantal-knop').forEach(x=>x.classList.remove('actief'));b.classList.add('actief');};
+  ar.appendChild(b);
+});
+
+function toon(s){['keuze','spel','einde'].forEach(x=>document.getElementById(x+'-scherm').classList.toggle('verborgen',x!==s));}
+function schud(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function maakVragen(){
+  let pool=[];
+  gekozenTafels.forEach(t=>alleT.forEach(b=>pool.push({a:t,b:b,antwoord:t*b})));
+  schud(pool);
+  const res=[];
+  while(res.length<gekozenAantal){res.push(...pool.slice(0,gekozenAantal-res.length));schud(pool);}
+  return res;
+}
+
+function startSpel(){
+  vragen=maakVragen();huidig=0;aantalGoed=0;aantalFout=0;bezig=false;huidigAntwoord='';tijdenGoed=[];
+  toon('spel');toonVraag();
+}
+
+function startTimer(){
+  vraagStart=performance.now();clearInterval(timerInt);
+  timerInt=setInterval(()=>{
+    const s=(performance.now()-vraagStart)/1000;
+    document.getElementById('timer-getal').textContent=s.toFixed(1)+'s';
+    document.getElementById('timer-balk').style.width=Math.max(0,100-s/30*100)+'%';
+  },100);
+}
+function stopTimer(){clearInterval(timerInt);return(performance.now()-vraagStart)/1000;}
+
+function toonVraag(){
+  const v=vragen[huidig];
+  document.getElementById('som-tekst').textContent=v.a+' × '+v.b+' = ?';
+  huidigAntwoord='';updateDisplay();
+  document.getElementById('antwoord-display').className='antwoord-display leeg';
+  document.getElementById('feedback').textContent='';
+  document.getElementById('stat-nr').textContent=(huidig+1)+'/'+vragen.length;
+  document.getElementById('stat-goed').textContent=aantalGoed;
+  document.getElementById('stat-fout').textContent=aantalFout;
+  document.getElementById('voortgang-vul').style.width=(huidig/vragen.length*100)+'%';
+  document.getElementById('timer-getal').textContent='0.0s';
+  document.getElementById('timer-balk').style.width='100%';
+  setKeys(true);bezig=false;startTimer();
+}
+
+function updateDisplay(){
+  const d=document.getElementById('antwoord-display');
+  if(huidigAntwoord===''){d.textContent='?';d.classList.add('leeg');}
+  else{d.textContent=huidigAntwoord;d.classList.remove('leeg');}
+}
+
+function toetsInvoer(c){if(bezig||huidigAntwoord.length>=3)return;huidigAntwoord+=c;updateDisplay();}
+function wis(){if(bezig)return;huidigAntwoord=huidigAntwoord.slice(0,-1);updateDisplay();}
+function setKeys(aan){document.querySelectorAll('.key').forEach(k=>k.classList.toggle('uitgeschakeld',!aan));}
+
+function confetti(){
+  const c=document.createElement('div');c.className='ster-regen';document.body.appendChild(c);
+  const em=['🌟','⭐','✨','💫','🎉','💙','🎊','🔵'];
+  for(let i=0;i<12;i++){
+    const s=document.createElement('div');s.className='ster-val';
+    s.textContent=em[Math.floor(Math.random()*em.length)];
+    s.style.left=(5+Math.random()*90)+'%';
+    s.style.animationDelay=(Math.random()*0.5)+'s';
+    s.style.fontSize=(14+Math.random()*14)+'px';
+    c.appendChild(s);
+  }
+  setTimeout(()=>c.remove(),1600);
+}
+
+function controleer(){
+  if(bezig||huidigAntwoord==='')return;
+  const elapsed=stopTimer();bezig=true;setKeys(false);
+  const val=parseInt(huidigAntwoord);
+  const juist=vragen[huidig].antwoord;
+  const d=document.getElementById('antwoord-display');
+  const fb=document.getElementById('feedback');
+  if(val===juist){
+    d.className='antwoord-display goed';
+    fb.textContent=goedTekst[Math.floor(Math.random()*goedTekst.length)];
+    aantalGoed++;tijdenGoed.push(elapsed);confetti();
+  } else {
+    d.className='antwoord-display fout';
+    fb.textContent=foutTekst[Math.floor(Math.random()*foutTekst.length)]+' Het is '+juist;
+    aantalFout++;
+  }
+  document.getElementById('stat-goed').textContent=aantalGoed;
+  document.getElementById('stat-fout').textContent=aantalFout;
+  setTimeout(()=>{huidig++;if(huidig<vragen.length)toonVraag();else toonEinde();},1100);
+}
+
+function toonEinde(){
+  clearInterval(timerInt);
+  document.getElementById('voortgang-vul').style.width='100%';
+  const pct=Math.round(aantalGoed/vragen.length*100);
+  document.getElementById('eind-goed').textContent=aantalGoed;
+  document.getElementById('eind-fout').textContent=aantalFout;
+  document.getElementById('eind-pct').textContent=pct+'%';
+  if(tijdenGoed.length>0){
+    const gem=tijdenGoed.reduce((a,b)=>a+b,0)/tijdenGoed.length;
+    document.getElementById('eind-tijd').textContent=gem.toFixed(1)+'s';
+  } else document.getElementById('eind-tijd').textContent='—';
+  const s=document.getElementById('einde-ster'),t=document.getElementById('einde-titel');
+  document.getElementById('einde-sub').textContent='Je had '+aantalGoed+' van '+vragen.length+' goed!';
+  if(pct===100){s.textContent='🏆';t.textContent='Perfect! Helemaal goed!';}
+  else if(pct>=80){s.textContent='🌟';t.textContent='Geweldig gedaan!';}
+  else if(pct>=60){s.textContent='👍';t.textContent='Goed gedaan!';}
+  else{s.textContent='💪';t.textContent='Blijf oefenen!';}
+  toon('einde');
+  confetti();setTimeout(confetti,400);setTimeout(confetti,800);
+}
+
+function naarKeuze(){clearInterval(timerInt);toon('keuze');}
+
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('spel-scherm').classList.contains('verborgen'))return;
+  if(e.key>='0'&&e.key<='9')toetsInvoer(e.key);
+  else if(e.key==='Backspace')wis();
+  else if(e.key==='Enter')controleer();
+});
+</script>
+</body>
+</html>
