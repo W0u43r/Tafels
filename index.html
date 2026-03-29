@@ -414,9 +414,8 @@ function schud(a) { for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random
 function maakVragen() {
   let pool = [];
   gekozenTafels.forEach(t => {
-    // Tafels 1-10 gaan tot ×10, tafels 11 en 12 gaan tot ×12
-    const maxFactor = (t === 11 || t === 12) ? 12 : 10;
-    const factoren = alleT.filter(b => b <= maxFactor);
+    // Alle tafels gaan tot x10
+    const factoren = alleT.filter(b => b <= 10);
     factoren.forEach(b => {
       if (gekozenRichting === 'normaal' || gekozenRichting === 'beide') {
         pool.push({ links: t, rechts: b, antwoord: t*b });
